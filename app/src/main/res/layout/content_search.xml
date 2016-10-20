@@ -33,8 +33,7 @@
         android:layout_alignBottom="@+id/etQuery"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:onClick="onArticleSearch" />
+        android:layout_alignParentTop="true"/>
 
     <GridView
         android:id="@+id/gvResults"

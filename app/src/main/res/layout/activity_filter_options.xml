@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/toolbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:id="@+id/rowBeginDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbarLayout"
+        android:paddingTop="@dimen/filter_row_padding"
+        android:paddingBottom="@dimen/filter_row_padding">
+
+        <TextView
+            android:id="@+id/tvBeginDateLabel"
+            android:layout_width="@dimen/filter_label_width"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/begin_date" />
+
+        <ImageButton
+            android:id="@+id/btnClearBeginDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_cancel"
+            android:onClick="clearBeginDate"
+            android:background="@color/colorTransparent"/>
+
+        <EditText
+            android:id="@+id/etBeginDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/tvBeginDateLabel"
+            android:layout_toStartOf="@id/btnClearBeginDate"
+            android:layout_centerVertical="true"
+            android:maxLines="1"
+            android:cursorVisible="false"
+            android:hint="@string/begin_date_hint" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/rowSortOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rowBeginDate"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/filter_row_padding"
+        android:paddingBottom="@dimen/filter_row_padding">
+
+        <TextView
+            android:id="@+id/tvSortOrderLabel"
+            android:layout_width="@dimen/filter_label_width"
+            android:layout_height="wrap_content"
+            android:text="@string/sort_order" />
+
+        <Spinner
+            android:id="@+id/spSortOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rowNewsDesk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rowSortOrder"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/filter_row_padding"
+        android:paddingBottom="@dimen/filter_row_padding">
+
+        <TextView
+            android:id="@+id/tvNewsDeskLabel"
+            android:layout_width="@dimen/filter_label_width"
+            android:layout_height="wrap_content"
+            android:text="@string/news_desk" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <CheckBox
+                android:id="@+id/cbArts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/arts"/>
+            <CheckBox
+                android:id="@+id/cbFashion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fashion"/>
+            <CheckBox
+                android:id="@+id/cbSports"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sports"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rowNewsDesk"
+        android:layout_centerHorizontal="true"
+        android:text="@string/save"
+        android:onClick="onSave" />
+</RelativeLayout>

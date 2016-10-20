@@ -12,14 +12,26 @@
         <activity
             android:name=".activities.SearchActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ArticleActivity"></activity>
+        <activity
+            android:name=".activities.ArticleActivity"
+            android:label="@string/app_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.huyentran.nytsearch.activities.SearchActivity" />
+        </activity>
+        <activity
+            android:name=".activities.FilterOptionsActivity"
+            android:label="@string/filter_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.huyentran.nytsearch.activities.SearchActivity" />
+        </activity>
     </application>
 
 </manifest>
