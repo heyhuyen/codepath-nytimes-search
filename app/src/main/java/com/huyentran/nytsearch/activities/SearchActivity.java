@@ -1,7 +1,11 @@
 package com.huyentran.nytsearch.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -27,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
@@ -40,7 +45,7 @@ public class SearchActivity extends AppCompatActivity {
     private static final int GRID_NUM_COLUMNS = 4;
     private static final int GRID_SPACE_SIZE = 5;
     private static final int FIRST_PAGE = 0;
-    private static final int PAGE_MAX = 5;
+    private static final int PAGE_MAX = 2; // TODO: lower for now
 
     private EditText etQuery;
     private Button btnSearch;
@@ -52,6 +57,7 @@ public class SearchActivity extends AppCompatActivity {
     private FilterSettings filterSettings;
 
     private ArticleClient client;
+    private Snackbar snackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,39 +139,38 @@ public class SearchActivity extends AppCompatActivity {
      */
     private void articleSearch(final int page) {
         String query = this.etQuery.getText().toString();
-        if (query.isEmpty() || page == PAGE_MAX) {
+        if (query.isEmpty() || page == PAGE_MAX || !isOnline()) {
             return;
-        } else {
-            if (page == FIRST_PAGE) {
-                articles.clear();
-                articleArrayAdapter.notifyDataSetChanged();
-            }
-            this.client.getArticles(page, query, this.filterSettings, new JsonHttpResponseHandler
-                    () {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    JSONArray articleJsonResults = null;
-                    try {
-                        articleJsonResults = response.getJSONObject(RESPONSE_KEY)
-                                .getJSONArray(DOCS_KEY);
-                        articles.addAll(Article.fromJSONArray(articleJsonResults));
-                        articleArrayAdapter.notifyDataSetChanged();
-                    }
-                    catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    if (statusCode == 429 && errorResponse.toString().equals("{\"message\":\"API rate limit exceeded\"}")) {
-                        Log.d("DEBUG", "API rate limit exceeded. Retrying.");
-                        articleSearch(page);
-                    }
-                }
-            });
         }
+        if (page == FIRST_PAGE) {
+            articles.clear();
+            articleArrayAdapter.notifyDataSetChanged();
+        }
+        this.client.getArticles(page, query, this.filterSettings, new JsonHttpResponseHandler
+                () {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                JSONArray articleJsonResults = null;
+                try {
+                    articleJsonResults = response.getJSONObject(RESPONSE_KEY)
+                            .getJSONArray(DOCS_KEY);
+                    articles.addAll(Article.fromJSONArray(articleJsonResults));
+                    articleArrayAdapter.notifyDataSetChanged();
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (statusCode == 429 && errorResponse.toString().equals("{\"message\":\"API rate limit exceeded\"}")) {
+                    Log.d("DEBUG", "API rate limit exceeded. Retrying.");
+                    articleSearch(page);
+                }
+            }
+        });
     }
 
     /**
@@ -200,5 +205,45 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private Boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    public boolean isOnline() {
+        boolean network = isNetworkAvailable();
+        if (!network) {
+            // no network!
+            this.snackbar = Snackbar.make(this.rvArticles, R.string.error_network,
+                    Snackbar.LENGTH_INDEFINITE);
+            this.snackbar.show();
+            return false;
+        }
+
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            if (exitValue == 0) {
+                if (this.snackbar != null && this.snackbar.isShown()) {
+                    this.snackbar = Snackbar.make(this.rvArticles, R.string.online,
+                            Snackbar.LENGTH_SHORT);
+                    this.snackbar.show();
+                }
+                return true;
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // offline
+        this.snackbar = Snackbar.make(this.rvArticles, R.string.error_offline,
+                Snackbar.LENGTH_INDEFINITE);
+        this.snackbar.show();
+        return false;
     }
 }

@@ -44,6 +44,7 @@ public class ArticleClient {
 
     public ArticleClient() {
         this.client = new AsyncHttpClient();
+        this.client.setMaxRetriesAndTimeout(2, 500);
     }
 
     // Method for accessing the search API
