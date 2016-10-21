@@ -1,9 +1,8 @@
 package com.huyentran.nytsearch.adapters;
 
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 
 /**
  * Endless RecyclerView scrolling. Source: https://gist.github.com/nesquena/d09dc68ff07e845cc622
@@ -54,12 +53,6 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
                     .findLastVisibleItemPositions(null);
             // get maximum element within the list
             lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions);
-        } else if (mLayoutManager instanceof LinearLayoutManager) {
-            lastVisibleItemPosition = ((LinearLayoutManager) mLayoutManager)
-                    .findLastVisibleItemPosition();
-        } else if (mLayoutManager instanceof GridLayoutManager) {
-            lastVisibleItemPosition = ((GridLayoutManager) mLayoutManager)
-                    .findLastVisibleItemPosition();
         }
 
         // If the total item count is zero and the previous isn't, assume the

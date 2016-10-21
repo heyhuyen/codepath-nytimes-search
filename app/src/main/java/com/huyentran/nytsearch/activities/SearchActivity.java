@@ -159,7 +159,10 @@ public class SearchActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
-                    Log.d("DEBUG", errorResponse.toString());
+                    if (statusCode == 429 && errorResponse.toString().equals("{\"message\":\"API rate limit exceeded\"}")) {
+                        Log.d("DEBUG", "API rate limit exceeded. Retrying.");
+                        articleSearch(page);
+                    }
                 }
             });
         }
