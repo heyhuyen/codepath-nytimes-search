@@ -24,6 +24,8 @@ public class ArticleClient {
     private static final String BEGIN_DATE_PARAM_KEY = "begin_date";
     private static final String SORT_BY_PARAM_KEY = "sort";
     private static final String FILTERS_PARAM_KEY = "fq";
+    private static final String FIELD_LIMIT_PARAM_KEY = "fl";
+    private static final String FIELD_LIMIT_PARAM = "web_url,multimedia,headline,pub_date,document_type,news_desk";
 
     private static final String HYPHEN = "-";
     private static final String SPACE = " ";
@@ -45,24 +47,25 @@ public class ArticleClient {
     }
 
     // Method for accessing the search API
-    public void getArticles(final String query, FilterSettings
+    public void getArticles(int page, final String query, FilterSettings
             filterSettings, JsonHttpResponseHandler handler) {
-        RequestParams requestParams = getRequestParams(query, filterSettings);
+        RequestParams requestParams = getRequestParams(page, query, filterSettings);
         client.get(API_SEARCH_URL, requestParams, handler);
     }
 
     /**
      * Returns a {@link RequestParams} object initialized with filter search settings, if any.
      */
-    private RequestParams getRequestParams(String query, FilterSettings filterSettings) {
+    private RequestParams getRequestParams(int page, String query, FilterSettings filterSettings) {
         RequestParams params = new RequestParams();
         params.put(API_KEY_PARAM_KEY, API_KEY);
-        params.put(PAGE_PARAM_KEY, 0);
+        params.put(PAGE_PARAM_KEY, page);
         params.put(QUERY_PARAM_KEY, query);
+        params.put(FIELD_LIMIT_PARAM_KEY, FIELD_LIMIT_PARAM);
 
         // filter params
         String beginDate = filterSettings.getBeginDate();
-        if (!TextUtils.isEmpty(beginDate)) {
+        if (beginDate != null && !TextUtils.isEmpty(beginDate)) {
             params.put(BEGIN_DATE_PARAM_KEY, beginDate.replace(HYPHEN, EMPTY));
         }
         FilterSettings.SortOrder sortOrder = filterSettings.getSortOrder();
