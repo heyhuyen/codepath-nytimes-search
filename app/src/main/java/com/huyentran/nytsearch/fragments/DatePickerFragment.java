@@ -11,13 +11,15 @@ import com.huyentran.nytsearch.utils.DateUtils;
 
 import java.util.Calendar;
 
-import static com.huyentran.nytsearch.utils.Constants.DATE_KEY;
-import static com.huyentran.nytsearch.utils.Constants.MIN_DATE_MILLIS;
-
 /**
  * Date picker dialog fragment.
  */
 public class DatePickerFragment extends DialogFragment {
+
+    private static final String DATE_KEY = "date";
+    private static final String MIN_DATE_STR = "1851-09-18";
+    private static final Calendar MIN_DATE = DateUtils.getDateFromString(MIN_DATE_STR);
+    private static final long MIN_DATE_MILLIS = MIN_DATE.getTimeInMillis();
 
     public DatePickerFragment() {
         // Empty constructor required for DialogFragment

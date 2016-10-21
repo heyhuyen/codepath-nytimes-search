@@ -25,15 +25,16 @@ import java.util.HashSet;
 import static com.huyentran.nytsearch.utils.Constants.DATE_PICKER_KEY;
 import static com.huyentran.nytsearch.utils.Constants.EMPTY;
 import static com.huyentran.nytsearch.utils.Constants.FILTER_SETTINGS_KEY;
-import static com.huyentran.nytsearch.utils.Constants.NEWS_DESK_ARTS;
-import static com.huyentran.nytsearch.utils.Constants.NEWS_DESK_FASHION;
-import static com.huyentran.nytsearch.utils.Constants.NEWS_DESK_SPORTS;
 
 /**
  * Activity for setting advanced search filter options.
  */
 public class FilterOptionsActivity extends AppCompatActivity
         implements DatePickerDialog.OnDateSetListener{
+
+    private static final String NEWS_DESK_ARTS = "Arts";
+    private static final String NEWS_DESK_FASHION = "Fashion & Style";
+    private static final String NEWS_DESK_SPORTS = "Sports";
 
     private EditText etBeginDate;
     private ImageButton btnClearBeginDate;
@@ -70,7 +71,7 @@ public class FilterOptionsActivity extends AppCompatActivity
     private void setupBeginDate() {
         this.etBeginDate = (EditText) findViewById(R.id.etBeginDate);
         String beginDate = this.filterSettings.getBeginDate();
-        if (beginDate != null && !TextUtils.isEmpty(beginDate)) {
+        if (!TextUtils.isEmpty(beginDate)) {
             this.etBeginDate.setText(beginDate);
         }
         this.etBeginDate.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +146,7 @@ public class FilterOptionsActivity extends AppCompatActivity
         this.cbFashion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (cbArts.isChecked()) {
+                if (cbFashion.isChecked()) {
                     filterSettings.addNewsDeskValue(NEWS_DESK_FASHION);
                 } else {
                     filterSettings.removeNewsDeskValue(NEWS_DESK_FASHION);

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,22 +12,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
 import com.huyentran.nytsearch.R;
 import com.huyentran.nytsearch.adapters.ArticleArrayAdapter;
 import com.huyentran.nytsearch.model.Article;
 import com.huyentran.nytsearch.model.FilterSettings;
-import com.loopj.android.http.AsyncHttpClient;
+import com.huyentran.nytsearch.net.ArticleClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -48,6 +43,8 @@ public class SearchActivity extends AppCompatActivity {
 
     private FilterSettings filterSettings;
 
+    private ArticleClient client;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +54,7 @@ public class SearchActivity extends AppCompatActivity {
 
         setupViews();
         this.filterSettings = new FilterSettings();
+        this.client = new ArticleClient();
     }
 
     /**
@@ -117,51 +115,23 @@ public class SearchActivity extends AppCompatActivity {
         String query = this.etQuery.getText().toString();
         if (query.isEmpty()) {
             return;
-        }
-        AsyncHttpClient client = new AsyncHttpClient();
-
-        RequestParams requestParams = paramsWithFilters();
-        requestParams.put(API_KEY_PARAM_KEY, API_KEY);
-        requestParams.put(PAGE_PARAM_KEY, 0);
-        requestParams.put(QUERY_PARAM_KEY, query);
-
-        client.get(NYT_SEARCH_API_URL, requestParams, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                JSONArray articleJsonResults = null;
-                try {
-                    articleJsonResults = response.getJSONObject(RESPONSE_KEY).getJSONArray(DOCS_KEY);
-                    articleArrayAdapter.clear();
-                    articleArrayAdapter.addAll(Article.fromJSONArray(articleJsonResults));
+        } else {
+            this.client.getArticles(query, this.filterSettings, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    JSONArray articleJsonResults = null;
+                    try {
+                        articleJsonResults = response.getJSONObject(RESPONSE_KEY)
+                                .getJSONArray(DOCS_KEY);
+                        articleArrayAdapter.clear();
+                        articleArrayAdapter.addAll(Article.fromJSONArray(articleJsonResults));
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-                catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    /**
-     * Returns a {@link RequestParams} object initialized with filter search settings, if any.
-     */
-    private RequestParams paramsWithFilters() {
-        RequestParams params = new RequestParams();
-        String beginDate = this.filterSettings.getBeginDate();
-        if (beginDate != null && !TextUtils.isEmpty(beginDate)) {
-            params.put(BEGIN_DATE_PARAM_KEY, beginDate.replace(HYPHEN, EMPTY));
+            });
         }
-        FilterSettings.SortOrder sortOrder = this.filterSettings.getSortOrder();
-        if (sortOrder != FilterSettings.SortOrder.NONE) {
-            params.put(SORT_BY_PARAM_KEY, sortOrder.name().toLowerCase());
-        }
-        HashSet<String> newsDeskValues = this.filterSettings.getNewsDeskValues();
-        if (!newsDeskValues.isEmpty()) {
-            Joiner joiner = Joiner.on(SPACE);
-            String newsDeskString = joiner.join(Iterables.transform(newsDeskValues,
-                    NEWS_DESK_VALUE_TRANSFORM));
-            params.put(FILTERS_PARAM_KEY, String.format(NEWS_DESK_FORMAT, newsDeskString));
-        }
-        return params;
     }
 
     /**

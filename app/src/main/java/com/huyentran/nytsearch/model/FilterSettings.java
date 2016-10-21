@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 
 import static com.huyentran.nytsearch.model.FilterSettings.SortOrder.NONE;
+import static com.huyentran.nytsearch.utils.Constants.EMPTY;
 
 /**
  * Model for search filter settings.
@@ -20,7 +21,7 @@ public class FilterSettings implements Serializable {
     private HashSet<String> newsDeskValues;
 
     public FilterSettings() {
-        this.beginDate = null;
+        this.beginDate = EMPTY;
         this.sortOrder = NONE;
         this.newsDeskValues = new HashSet<>();
     }
@@ -73,8 +74,7 @@ public class FilterSettings implements Serializable {
         }
 
         FilterSettings that = (FilterSettings) o;
-        return ( ( this.beginDate == null && that.beginDate == null )
-                 || this.beginDate.equals(that.getBeginDate()) )
+        return this.beginDate.equals(that.getBeginDate())
                 && this.sortOrder.equals(that.getSortOrder())
                 && this.newsDeskValues.equals(that.newsDeskValues);
     }
