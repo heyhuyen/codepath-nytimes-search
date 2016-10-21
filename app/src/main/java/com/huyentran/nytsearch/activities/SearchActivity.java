@@ -3,20 +3,22 @@ package com.huyentran.nytsearch.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 
 import com.huyentran.nytsearch.R;
 import com.huyentran.nytsearch.adapters.ArticleArrayAdapter;
+import com.huyentran.nytsearch.adapters.SpacesItemDecoration;
 import com.huyentran.nytsearch.model.Article;
 import com.huyentran.nytsearch.model.FilterSettings;
 import com.huyentran.nytsearch.net.ArticleClient;
+import com.huyentran.nytsearch.adapters.ItemClickSupport;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -33,10 +35,12 @@ import static com.huyentran.nytsearch.utils.Constants.*;
  * Main activity for searching for and displaying article results.
  */
 public class SearchActivity extends AppCompatActivity {
+    private static final int GRID_NUM_COLUMNS = 4;
+    private static final int GRID_SPACE_SIZE = 5;
 
     private EditText etQuery;
     private Button btnSearch;
-    private GridView gvResults;
+    private RecyclerView rvArticles;
 
     private ArrayList<Article> articles;
     private ArticleArrayAdapter articleArrayAdapter;
@@ -63,11 +67,15 @@ public class SearchActivity extends AppCompatActivity {
     private void setupViews() {
         this.etQuery = (EditText) findViewById(R.id.etQuery);
         this.btnSearch = (Button) findViewById(R.id.btnSearch);
-        this.gvResults = (GridView) findViewById(R.id.gvResults);
+        this.rvArticles = (RecyclerView) findViewById(R.id.rvArticles);
 
         this.articles = new ArrayList<>();
         this.articleArrayAdapter = new ArticleArrayAdapter(this, this.articles);
-        this.gvResults.setAdapter(this.articleArrayAdapter);
+        this.rvArticles.setAdapter(this.articleArrayAdapter);
+        StaggeredGridLayoutManager gridLayoutManager =
+                new StaggeredGridLayoutManager(GRID_NUM_COLUMNS,
+                        StaggeredGridLayoutManager.VERTICAL);
+        this.rvArticles.setLayoutManager(gridLayoutManager);
 
         // setup listener for search button click
         this.btnSearch.setOnClickListener(new View.OnClickListener() {
@@ -77,13 +85,19 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        // setup listener for article grid click
-        this.gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                launchArticleView(position);
-            }
-        });
+        // setup click listener for recycler views
+        ItemClickSupport.addTo(this.rvArticles).setOnItemClickListener(
+                new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        launchArticleView(position);
+                    }
+                }
+        );
+
+        // decorator to make grid tiles look nice (spacing in between tiles)
+        SpacesItemDecoration decoration = new SpacesItemDecoration(GRID_SPACE_SIZE);
+        this.rvArticles.addItemDecoration(decoration);
     }
 
     @Override
@@ -123,8 +137,9 @@ public class SearchActivity extends AppCompatActivity {
                     try {
                         articleJsonResults = response.getJSONObject(RESPONSE_KEY)
                                 .getJSONArray(DOCS_KEY);
-                        articleArrayAdapter.clear();
-                        articleArrayAdapter.addAll(Article.fromJSONArray(articleJsonResults));
+                        articles.clear();
+                        articles.addAll(Article.fromJSONArray(articleJsonResults));
+                        articleArrayAdapter.notifyDataSetChanged();
                     }
                     catch (JSONException e) {
                         e.printStackTrace();
@@ -161,7 +176,7 @@ public class SearchActivity extends AppCompatActivity {
             boolean filtersChanged = !this.filterSettings.equals(filterSettings);
             if (filtersChanged) {
                 this.filterSettings = filterSettings;
-                if (!this.articleArrayAdapter.isEmpty()) {
+                if (this.articleArrayAdapter.getItemCount() != 0) {
                     articleSearch();
                 }
             }

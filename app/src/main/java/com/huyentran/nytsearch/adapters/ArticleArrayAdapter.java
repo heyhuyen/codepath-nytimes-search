@@ -1,11 +1,11 @@
 package com.huyentran.nytsearch.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,37 +18,61 @@ import java.util.List;
 /**
  * Adapter for {@link Article Articles}.
  */
-public class ArticleArrayAdapter extends ArrayAdapter<Article> {
+public class ArticleArrayAdapter extends RecyclerView.Adapter<ArticleArrayAdapter.ViewHolder> {
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public ImageView ivThumbnail;
+        public TextView tvHeadline;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            ivThumbnail = (ImageView) itemView.findViewById(R.id.ivThumbnail);
+            tvHeadline = (TextView) itemView.findViewById(R.id.tvHeadline);
+        }
+    }
+
+    private List<Article> mArticles;
+    private Context mContext;
+
     public ArticleArrayAdapter(Context context, List<Article> articles) {
-        super(context, android.R.layout.simple_list_item_1, articles);
+        mArticles = articles;
+        mContext = context;
+    }
+
+    private Context getContext() {
+        return this.mContext;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // get data item for position
-        Article article = this.getItem(position);
+    public ArticleArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
 
-        // check if existing view is being reused
-        // if not using a recycled view, inflate the layout
-        if (convertView == null) {
-            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-            convertView = layoutInflater.inflate(R.layout.item_article_result, parent, false);
-        }
+        // Inflate the custom layout
+        View articleView = inflater.inflate(R.layout.item_article_result, parent, false);
 
-        // find the image view
-        ImageView ivThumbnail = (ImageView) convertView.findViewById(R.id.ivThumbnail);
-        // clear out recycled image
+        // Return a new holder instance
+        return new ViewHolder(articleView);
+    }
+
+    @Override
+    public void onBindViewHolder(ArticleArrayAdapter.ViewHolder viewHolder, int position) {
+        Article article = this.mArticles.get(position);
+
+        ImageView ivThumbnail = viewHolder.ivThumbnail;
         ivThumbnail.setImageResource(0);
-        TextView tvHeadline = (TextView) convertView.findViewById(R.id.tvHeadline);
-        tvHeadline.setText(article.getHeadline());
-
-        // populate thumbnail image
-        // remote download image in background
         String thumbnailUrl = article.getThumbnail();
         if (!TextUtils.isEmpty(thumbnailUrl)) {
-            Picasso.with(getContext()).load(thumbnailUrl).into(ivThumbnail);
+            Picasso.with(getContext()).load(thumbnailUrl).fit()
+                    .centerCrop().into(ivThumbnail);
         }
+        TextView tvHeadline = viewHolder.tvHeadline;
+        tvHeadline.setText(article.getHeadline());
+    }
 
-        return convertView;
+    @Override
+    public int getItemCount() {
+        return this.mArticles.size();
     }
 }
