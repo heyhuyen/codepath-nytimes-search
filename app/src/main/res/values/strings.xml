@@ -26,6 +26,9 @@
     <string name="fashion">Fashion &amp; Style</string>
     <string name="sports">Sports</string>
 
+    <!-- Article Activity -->
+    <string name="action_share">Share</string>
+
     <!-- Internet Connectivity -->
     <string name="error_network">No network connectivity.</string>
     <string name="error_offline">No internet connectivity.</string>
