@@ -16,7 +16,8 @@ import android.webkit.WebViewClient;
 import com.huyentran.nytsearch.R;
 import com.huyentran.nytsearch.model.Article;
 
-import static com.huyentran.nytsearch.R.id.wvArticle;
+import org.parceler.Parcels;
+
 import static com.huyentran.nytsearch.utils.Constants.ARTICLE_KEY;
 
 /**
@@ -36,7 +37,7 @@ public class ArticleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Article article = (Article) getIntent().getSerializableExtra(ARTICLE_KEY);
+        Article article = Parcels.unwrap(getIntent().getParcelableExtra(ARTICLE_KEY));
         this.webView = (WebView) findViewById(R.id.wvArticle);
         this.webView.setWebViewClient(new WebViewClient() {
             @Override

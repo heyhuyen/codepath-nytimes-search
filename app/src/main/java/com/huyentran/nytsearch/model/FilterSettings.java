@@ -1,6 +1,8 @@
 package com.huyentran.nytsearch.model;
 
-import java.io.Serializable;
+import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
+
 import java.util.HashSet;
 
 import static com.huyentran.nytsearch.model.FilterSettings.SortOrder.NONE;
@@ -9,16 +11,18 @@ import static com.huyentran.nytsearch.utils.Constants.EMPTY;
 /**
  * Model for search filter settings.
  */
-public class FilterSettings implements Serializable {
+@Parcel
+public class FilterSettings {
+
     public enum SortOrder {
         NONE,
         NEWEST,
         OLDEST
-    };
+    }
 
-    private String beginDate;
-    private SortOrder sortOrder;
-    private HashSet<String> newsDeskValues;
+    String beginDate;
+    SortOrder sortOrder;
+    HashSet<String> newsDeskValues;
 
     public FilterSettings() {
         this.beginDate = EMPTY;

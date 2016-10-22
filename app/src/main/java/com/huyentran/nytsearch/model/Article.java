@@ -1,11 +1,12 @@
 package com.huyentran.nytsearch.model;
+import android.os.Parcelable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
 
-import java.io.Serializable;
-import java.net.URL;
 import java.util.ArrayList;
 
 import static com.huyentran.nytsearch.utils.Constants.EMPTY;
@@ -13,7 +14,8 @@ import static com.huyentran.nytsearch.utils.Constants.EMPTY;
 /**
  * Article model.
  */
-public class Article implements Serializable {
+@Parcel
+public class Article {
     private static final String WEB_URL_KEY = "web_url";
     private static final String HEADLINE_KEY = "headline";
     private static final String MAIN_HEADLINE_KEY = "main";
@@ -21,9 +23,13 @@ public class Article implements Serializable {
     private static final String URL_KEY = "url";
     private static final String THUMBNAIL_URL_FORMAT = "http://www.nytimes.com/%s";
 
-    private String webUrl;
-    private String headline;
-    private String thumbnail;
+    String webUrl;
+    String headline;
+    String thumbnail;
+
+    public Article() {
+        // empty constructor for Parceler library
+    }
 
     public Article(JSONObject jsonObject) {
         try {
@@ -71,4 +77,5 @@ public class Article implements Serializable {
     public String getThumbnail() {
         return this.thumbnail;
     }
+
 }

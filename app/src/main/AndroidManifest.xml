@@ -27,13 +27,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.huyentran.nytsearch.activities.SearchActivity" />
         </activity>
-        <activity
-            android:name=".activities.FilterOptionsActivity"
-            android:label="@string/filter_name">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.huyentran.nytsearch.activities.SearchActivity" />
-        </activity>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,7 @@ import com.huyentran.nytsearch.R;
 import com.huyentran.nytsearch.adapters.ArticleArrayAdapter;
 import com.huyentran.nytsearch.adapters.EndlessRecyclerViewScrollListener;
 import com.huyentran.nytsearch.adapters.SpacesItemDecoration;
+import com.huyentran.nytsearch.fragments.FilterOptionsDialogFragment;
 import com.huyentran.nytsearch.model.Article;
 import com.huyentran.nytsearch.model.FilterSettings;
 import com.huyentran.nytsearch.net.ArticleClient;
@@ -30,6 +32,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,11 +44,14 @@ import static com.huyentran.nytsearch.utils.Constants.*;
 /**
  * Main activity for searching for and displaying article results.
  */
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity
+        implements FilterOptionsDialogFragment.FilterOptionsFragmentListener{
+
     private static final int GRID_NUM_COLUMNS = 4;
     private static final int GRID_SPACE_SIZE = 5;
     private static final int FIRST_PAGE = 0;
     private static final int PAGE_MAX = 2; // TODO: lower for now
+    private static final String FILTER_OPTIONS_FRAGMENT_TAG = "fragment_filter_options";
 
     private SearchView searchView;
     private RecyclerView rvArticles;
@@ -191,30 +197,30 @@ public class SearchActivity extends AppCompatActivity {
     private void launchArticleView(int position) {
         Intent intent = new Intent(getApplicationContext(), ArticleActivity.class);
         Article article = articles.get(position);
-        intent.putExtra(ARTICLE_KEY, article);
+        intent.putExtra(ARTICLE_KEY, Parcels.wrap(article));
         startActivity(intent);
     }
 
     /**
-     * Launches {@link FilterOptionsActivity}.
+     * Launches {@link FilterOptionsDialogFragment} modal overlay.
      */
     private void launchFilterOptions() {
-        Intent intent = new Intent(getApplicationContext(), FilterOptionsActivity.class);
-        intent.putExtra(FILTER_SETTINGS_KEY, this.filterSettings);
-        startActivityForResult(intent, FILTER_CODE);
+        FilterOptionsDialogFragment filterOptionsDialogFragment =
+                FilterOptionsDialogFragment.newInstance(new FilterSettings(this.filterSettings));
+        filterOptionsDialogFragment.setStyle(
+                DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
+        filterOptionsDialogFragment.show(getSupportFragmentManager(), FILTER_OPTIONS_FRAGMENT_TAG);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == FILTER_CODE) {
-            FilterSettings filterSettings =
-                    (FilterSettings) data.getSerializableExtra(FILTER_SETTINGS_KEY);
-            boolean filtersChanged = !this.filterSettings.equals(filterSettings);
-            if (filtersChanged) {
-                this.filterSettings = filterSettings;
-                if (this.articleArrayAdapter.getItemCount() != 0) {
-                    articleSearch(this.searchView.getQuery().toString(), FIRST_PAGE);
-                }
+    public void onFinishFilterDialog(FilterSettings filterSettings) {
+        boolean filtersChanged = !this.filterSettings.equals(filterSettings);
+        Log.d("DEBUG", "filter changesd " + filtersChanged);
+        if (filtersChanged) {
+            this.filterSettings = filterSettings;
+            if (this.articleArrayAdapter.getItemCount() != 0) {
+                Log.d("DEBUG", "refresh!");
+                articleSearch(this.searchView.getQuery().toString(), FIRST_PAGE);
             }
         }
     }
