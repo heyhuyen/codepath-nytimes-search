@@ -2,6 +2,7 @@
     <string name="app_name">NY Times Search</string>
 
     <!-- Search Activity -->
+    <string name="action_search">Search</string>
     <string name="action_settings">Filter</string>
     <string name="et_search_hint">Enter search query</string>
     <string name="search">Search</string>
@@ -28,5 +29,4 @@
     <!-- Internet Connectivity -->
     <string name="error_network">No network connectivity.</string>
     <string name="error_offline">No internet connectivity.</string>
-    <string name="online">And we\'re back online!</string>
 </resources>

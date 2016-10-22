@@ -6,16 +6,16 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.huyentran.nytsearch.R;
 import com.huyentran.nytsearch.adapters.ArticleArrayAdapter;
@@ -47,8 +47,7 @@ public class SearchActivity extends AppCompatActivity {
     private static final int FIRST_PAGE = 0;
     private static final int PAGE_MAX = 2; // TODO: lower for now
 
-    private EditText etQuery;
-    private Button btnSearch;
+    private SearchView searchView;
     private RecyclerView rvArticles;
 
     private ArrayList<Article> articles;
@@ -75,16 +74,6 @@ public class SearchActivity extends AppCompatActivity {
      * Wiring and setup of view and view-related components.
      */
     private void setupViews() {
-        this.etQuery = (EditText) findViewById(R.id.etQuery);
-
-        this.btnSearch = (Button) findViewById(R.id.btnSearch);
-        this.btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                articleSearch(FIRST_PAGE);
-            }
-        });
-
         this.rvArticles = (RecyclerView) findViewById(R.id.rvArticles);
         this.articles = new ArrayList<>();
         this.articleArrayAdapter = new ArticleArrayAdapter(this, this.articles);
@@ -107,7 +96,7 @@ public class SearchActivity extends AppCompatActivity {
                 new EndlessRecyclerViewScrollListener(gridLayoutManager) {
                     @Override
                     public void onLoadMore(int page, int totalItemsCount) {
-                        articleSearch(page);
+                        articleSearch(searchView.getQuery().toString(), page);
                     }
                 });
     }
@@ -116,7 +105,30 @@ public class SearchActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search, menu);
-        return true;
+
+        // hookup search view in action bar
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // perform query here
+                articleSearch(query, FIRST_PAGE);
+
+                // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
+                // see https://code.google.com/p/android/issues/detail?id=24599
+                searchView.clearFocus();
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+
     }
 
     @Override
@@ -137,8 +149,8 @@ public class SearchActivity extends AppCompatActivity {
     /**
      * Launches request for an article search for text in the query Edit Text.
      */
-    private void articleSearch(final int page) {
-        String query = this.etQuery.getText().toString();
+    private void articleSearch(final String query, final int page) {
+        Log.d("DEBUG", "Search query: " + query + "; page: "+ page);
         if (query.isEmpty() || page == PAGE_MAX || !isOnline()) {
             return;
         }
@@ -167,7 +179,7 @@ public class SearchActivity extends AppCompatActivity {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 if (statusCode == 429 && errorResponse.toString().equals("{\"message\":\"API rate limit exceeded\"}")) {
                     Log.d("DEBUG", "API rate limit exceeded. Retrying.");
-                    articleSearch(page);
+                    articleSearch(query, page);
                 }
             }
         });
@@ -201,7 +213,7 @@ public class SearchActivity extends AppCompatActivity {
             if (filtersChanged) {
                 this.filterSettings = filterSettings;
                 if (this.articleArrayAdapter.getItemCount() != 0) {
-                    articleSearch(FIRST_PAGE);
+                    articleSearch(this.searchView.getQuery().toString(), FIRST_PAGE);
                 }
             }
         }
@@ -229,10 +241,8 @@ public class SearchActivity extends AppCompatActivity {
             Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
             int     exitValue = ipProcess.waitFor();
             if (exitValue == 0) {
-                if (this.snackbar != null && this.snackbar.isShown()) {
-                    this.snackbar = Snackbar.make(this.rvArticles, R.string.online,
-                            Snackbar.LENGTH_SHORT);
-                    this.snackbar.show();
+                if (this.snackbar != null && this.snackbar.isShownOrQueued()) {
+                    this.snackbar.dismiss();
                 }
                 return true;
             }
