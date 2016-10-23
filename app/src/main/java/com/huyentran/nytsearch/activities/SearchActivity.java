@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.MenuItemCompat;
@@ -51,6 +52,7 @@ public class SearchActivity extends AppCompatActivity
     private static final int GRID_SPACE_SIZE = 5;
     private static final int FIRST_PAGE = 0;
     private static final int PAGE_MAX = 2; // TODO: lower for now
+    private static final int RETRY_DELAY_MILLIS = 2000;
     private static final String FILTER_OPTIONS_FRAGMENT_TAG = "fragment_filter_options";
 
     private SearchView searchView;
@@ -124,7 +126,6 @@ public class SearchActivity extends AppCompatActivity
                 // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
                 // see https://code.google.com/p/android/issues/detail?id=24599
                 searchView.clearFocus();
-
                 return true;
             }
 
@@ -184,8 +185,14 @@ public class SearchActivity extends AppCompatActivity
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 if (statusCode == 429 && errorResponse.toString().equals("{\"message\":\"API rate limit exceeded\"}")) {
-                    Log.d("DEBUG", "API rate limit exceeded. Retrying.");
-                    articleSearch(query, page);
+                    Log.d("DEBUG", "API rate limit exceeded. Retrying in 2s.");
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            articleSearch(query, page);
+                        }
+                    }, RETRY_DELAY_MILLIS);
                 }
             }
         });
