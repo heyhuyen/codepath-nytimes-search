@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NY Times Search</string>
+    <string name="app_name">NYTimes Search</string>
 
     <!-- Search Activity -->
     <string name="action_search">Search</string>
@@ -28,6 +28,7 @@
     <string name="sports">Sports</string>
 
     <!-- Article Activity -->
+    <string name="action_save">Save</string>
     <string name="action_share">Share</string>
 
     <!-- Internet Connectivity -->

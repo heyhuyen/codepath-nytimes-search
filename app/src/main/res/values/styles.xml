@@ -6,25 +6,64 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textColorHint">@color/colorPrimaryLight</item>
+        <item name="android:textColorHighlight">@color/colorDivider</item>
 
-        <item name="android:datePickerDialogTheme">@style/customDialog</item>
+        <!-- Apply default style for dialogs -->
+        <item name="android:dialogTheme">@style/AppDialogTheme</item>
+        <!-- Apply default style for date picker dialogs -->
+        <item name="android:datePickerDialogTheme">@style/AppDatePickerDialogTheme</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="customDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:datePickerStyle">@style/datePicker</item>
+    <style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowTitleStyle">@style/DialogWindowTitle</item>
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">#000</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+
+        <!-- Define window properties as desired -->
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
 
-    <style name="datePicker" parent="customDialog">
+    <style name="DialogWindowTitle" parent="Base.DialogWindowTitle.AppCompat">
+        <item name="android:background">@color/colorPrimaryLight</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textAppearance">@style/DialogWindowTitleText</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:padding">@dimen/dialog_title_padding</item>
+    </style>
+
+    <style name="DialogWindowTitleText" parent="@android:style/TextAppearance.DialogWindowTitle">
+        <item name="android:textSize">@dimen/dialog_title_size</item>
+    </style>
+
+    <style name="AppDatePickerDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:datePickerStyle">@style/DatePicker</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="DatePicker" parent="AppDatePickerDialogTheme">
         <item name="android:datePickerMode">spinner</item>
+        <item name="colorAccent">@color/colorPrimaryLight</item>
     </style>
 
-    <style name="Dialog.FullScreen" parent="Theme.AppCompat.Dialog">
-        <item name="android:padding">0dp</item>
-        <item name="android:windowBackground">@android:color/white</item>
+    <style name="AppButton" parent="@android:style/Widget.Button">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/states_button</item>
+        <item name="android:textSize">@dimen/button_text_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
     </style>
 
 </resources>

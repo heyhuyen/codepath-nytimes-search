@@ -6,13 +6,13 @@
     <item android:id="@+id/action_search"
           android:orderInCategory="5"
           android:title="@string/action_search"
-          android:icon="@android:drawable/ic_menu_search"
+          android:icon="@drawable/icon_search"
           app:showAsAction="ifRoom|collapseActionView"
-          app:actionViewClass="android.support.v7.widget.SearchView" />
+          app:actionViewClass="android.support.v7.widget.SearchView"/>
 
     <item
         android:id="@+id/miFilter"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:icon="@drawable/icon_filter"
         android:title="@string/action_settings"
         app:showAsAction="always"
         android:orderInCategory="10" />

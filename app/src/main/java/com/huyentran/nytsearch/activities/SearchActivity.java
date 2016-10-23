@@ -112,7 +112,7 @@ public class SearchActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search, menu);
 
-        // hookup search view in action bar
+        // hookup icon_search view in action bar
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -153,7 +153,7 @@ public class SearchActivity extends AppCompatActivity
     }
 
     /**
-     * Launches request for an article search for text in the query Edit Text.
+     * Launches request for an article icon_search for text in the query Edit Text.
      */
     private void articleSearch(final String query, final int page) {
         Log.d("DEBUG", "Search query: " + query + "; page: "+ page);
@@ -208,7 +208,7 @@ public class SearchActivity extends AppCompatActivity
         FilterOptionsDialogFragment filterOptionsDialogFragment =
                 FilterOptionsDialogFragment.newInstance(new FilterSettings(this.filterSettings));
         filterOptionsDialogFragment.setStyle(
-                DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
+                DialogFragment.STYLE_NORMAL, R.style.AppDialogTheme);
         filterOptionsDialogFragment.show(getSupportFragmentManager(), FILTER_OPTIONS_FRAGMENT_TAG);
     }
 

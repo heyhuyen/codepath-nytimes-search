@@ -1,17 +1,14 @@
 package com.huyentran.nytsearch.fragments;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -32,7 +29,7 @@ import static com.huyentran.nytsearch.utils.Constants.EMPTY;
 import static com.huyentran.nytsearch.utils.Constants.FILTER_SETTINGS_KEY;
 
 /**
- * Dialog Fragment for setting advanced search filter options.
+ * Dialog Fragment for setting advanced icon_search filter options.
  */
 public class FilterOptionsDialogFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
@@ -68,42 +65,14 @@ public class FilterOptionsDialogFragment extends DialogFragment
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_filter_options, container);
         this.filterSettings = Parcels.unwrap(getArguments().getParcelable(FILTER_SETTINGS_KEY));
         this.listener = (FilterOptionsFragmentListener) getActivity();
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = inflater.inflate(R.layout.fragment_filter_options, null);
         setupViews(view);
-        alertDialogBuilder.setTitle(getResources().getString(R.string.filter_name));
-        alertDialogBuilder.setView(view);
-        alertDialogBuilder.setPositiveButton(getResources().getString(R.string.save),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // on success
-                        String beginDate = etBeginDate.getText().toString();
-                        filterSettings.setBeginDate(beginDate);
-
-                        filterSettings.setSortOrder(FilterSettings.SortOrder.valueOf(
-                                spSortOrder.getSelectedItem().toString().toUpperCase()));
-
-                        listener.onFinishFilterDialog(filterSettings);
-                        dismiss();
-                    }
-                }
-        );
-        alertDialogBuilder.setNegativeButton(getResources().getString(R.string.cancel),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }
-        );
-
-        return alertDialogBuilder.create();
+        getDialog().setTitle(getResources().getString(R.string.filter_name));
+        return view;
     }
 
     /**
@@ -113,6 +82,7 @@ public class FilterOptionsDialogFragment extends DialogFragment
         setupBeginDate(view);
         setupSortSpinner(view);
         setupNewsDeskCheckboxes(view);
+        setupButtons(view);
     }
 
     private void setupBeginDate(View view) {
@@ -213,15 +183,28 @@ public class FilterOptionsDialogFragment extends DialogFragment
         });
     }
 
-    @Override
-    public void onResume() {
-        // Get existing layout params for the window
-        ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
-        // Assign window properties to fill the parent
-        params.width = WindowManager.LayoutParams.MATCH_PARENT;
-        params.height = WindowManager.LayoutParams.MATCH_PARENT;
-        getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
-        // Call super onResume after sizing
-        super.onResume();
+    private void setupButtons(View view) {
+        Button btnSave = (Button) view.findViewById(R.id.btnSave);
+        Button btnCancel = (Button) view.findViewById(R.id.btnCancel);
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterSettings.setBeginDate(etBeginDate.getText().toString());
+
+                filterSettings.setSortOrder(FilterSettings.SortOrder.valueOf(
+                        spSortOrder.getSelectedItem().toString().toUpperCase()));
+
+                listener.onFinishFilterDialog(filterSettings);
+                dismiss();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 }

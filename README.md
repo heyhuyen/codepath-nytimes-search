@@ -3,7 +3,7 @@
 NYT Search is an android app that allows a user to search for articles on web using simple filters.
 The app utilizes [New York Times Search API](http://developer.nytimes.com/docs/read/article_search_api_v2).
 
-Time spent: 13 hours spent in total
+Time spent: 16 hours spent in total
 
 ## User Stories
 
@@ -29,7 +29,7 @@ The following **optional** features are implemented:
 * [x] Used the **ActionBar SearchView** or custom layout as the query box instead of an EditText
 * [x] User can **share an article link** to their friends or email it to themselves
 * [x] Replaced Filter Settings Activity with a lightweight modal overlay
-* [ ] Improved the user interface and experiment with image assets and/or styling and coloring
+* [x] Improved the user interface and experiment with image assets and/or styling and coloring
 
 The following **bonus** features are implemented:
 
@@ -39,7 +39,8 @@ The following **bonus** features are implemented:
 * [x] Use Parcelable instead of Serializable using the popular [Parceler library](http://guides
 .codepath.com/android/Using-Parceler).
 * [ ] Leverages the [data binding support module](http://guides.codepath.com/android/Applying-Data-Binding-for-Views) to bind data into layout templates.
-* [ ] Replace all icon drawables and other static image assets with [vector drawables](http://guides.codepath.com/android/Drawables#vector-drawables) where appropriate.
+* [x] Replace all icon drawables and other static image assets with [vector drawables]
+(http://guides.codepath.com/android/Drawables#vector-drawables) where appropriate.
 * [ ] Replace Picasso with [Glide](http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en) for more efficient image rendering.
 * [ ] Uses [retrolambda expressions](http://guides.codepath.com/android/Lambda-Expressions) to cleanup event handling blocks.
 * [ ] Leverages the popular [GSON library](http://guides.codepath.com/android/Using-Android-Async-Http-Client#decoding-with-gson-library) to streamline the parsing of JSON data.

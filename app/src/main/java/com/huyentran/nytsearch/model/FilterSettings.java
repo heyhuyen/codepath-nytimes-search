@@ -9,7 +9,7 @@ import static com.huyentran.nytsearch.model.FilterSettings.SortOrder.NONE;
 import static com.huyentran.nytsearch.utils.Constants.EMPTY;
 
 /**
- * Model for search filter settings.
+ * Model for icon_search filter settings.
  */
 @Parcel
 public class FilterSettings {
