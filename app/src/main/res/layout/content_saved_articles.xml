@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_search"
+    android:id="@+id/content_saved_articles"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -11,11 +11,11 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.huyentran.nytsearch.activities.SearchActivity"
-    tools:showIn="@layout/activity_search">
+    tools:context="com.huyentran.nytsearch.activities.SavedArticlesActivity"
+    tools:showIn="@layout/activity_saved_articles">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvArticles"
+        android:id="@+id/rvSavedArticles"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"

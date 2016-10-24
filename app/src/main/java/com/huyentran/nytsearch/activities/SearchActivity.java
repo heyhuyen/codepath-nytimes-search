@@ -48,8 +48,6 @@ import static com.huyentran.nytsearch.utils.Constants.*;
 public class SearchActivity extends AppCompatActivity
         implements FilterOptionsDialogFragment.FilterOptionsFragmentListener{
 
-    private static final int GRID_NUM_COLUMNS = 4;
-    private static final int GRID_SPACE_SIZE = 5;
     private static final int FIRST_PAGE = 0;
     private static final int PAGE_MAX = 2; // TODO: lower for now
     private static final int RETRY_DELAY_MILLIS = 2000;
@@ -148,6 +146,8 @@ public class SearchActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.miFilter) {
             launchFilterOptions();
+        } else if (id == R.id.miSaved) {
+            launchSavedArticlesView();
         }
 
         return super.onOptionsItemSelected(item);
@@ -217,6 +217,14 @@ public class SearchActivity extends AppCompatActivity
         filterOptionsDialogFragment.setStyle(
                 DialogFragment.STYLE_NORMAL, R.style.AppDialogTheme);
         filterOptionsDialogFragment.show(getSupportFragmentManager(), FILTER_OPTIONS_FRAGMENT_TAG);
+    }
+
+    /**
+     * Launches {@link SavedArticlesActivity}.
+     */
+    private void launchSavedArticlesView() {
+        Intent intent = new Intent(getApplicationContext(), SavedArticlesActivity.class);
+        startActivity(intent);
     }
 
     @Override

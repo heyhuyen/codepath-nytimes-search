@@ -4,6 +4,7 @@
     <!-- Search Activity -->
     <string name="action_search">Search</string>
     <string name="action_settings">Filter</string>
+    <string name="action_saved">Saved Articles</string>
     <string name="et_search_hint">Enter search query</string>
     <string name="search">Search</string>
 
@@ -29,7 +30,11 @@
 
     <!-- Article Activity -->
     <string name="action_save">Save</string>
+    <string name="action_unsave">Un-save</string>
     <string name="action_share">Share</string>
+
+    <!-- Saved Articles Activity -->
+    <string name="saved_articles">Saved Articles</string>
 
     <!-- Internet Connectivity -->
     <string name="error_network">No network connectivity.</string>

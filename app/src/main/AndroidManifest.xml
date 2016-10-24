@@ -23,6 +23,11 @@
         <activity
             android:name=".activities.ArticleActivity"
             android:label="">
+        </activity>
+        <activity
+            android:name=".activities.SavedArticlesActivity"
+            android:label="@string/saved_articles"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.huyentran.nytsearch.activities.SearchActivity" />

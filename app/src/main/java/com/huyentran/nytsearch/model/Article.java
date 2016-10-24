@@ -1,11 +1,9 @@
 package com.huyentran.nytsearch.model;
-import android.os.Parcelable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
-import org.parceler.ParcelConstructor;
 
 import java.util.ArrayList;
 
@@ -23,12 +21,20 @@ public class Article {
     private static final String URL_KEY = "url";
     private static final String THUMBNAIL_URL_FORMAT = "http://www.nytimes.com/%s";
 
+    long id;
     String webUrl;
     String headline;
     String thumbnail;
 
     public Article() {
         // empty constructor for Parceler library
+    }
+
+    public Article(long id, String webUrl, String headline, String thumbnail) {
+        this.id = id;
+        this.webUrl = webUrl;
+        this.headline = headline;
+        this.thumbnail = thumbnail;
     }
 
     public Article(JSONObject jsonObject) {
@@ -64,6 +70,14 @@ public class Article {
         }
 
         return results;
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getWebUrl() {

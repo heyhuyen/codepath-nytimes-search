@@ -3,7 +3,7 @@
 NYT Search is an android app that allows a user to search for articles on web using simple filters.
 The app utilizes [New York Times Search API](http://developer.nytimes.com/docs/read/article_search_api_v2).
 
-Time spent: 16 hours spent in total
+Time spent: 18 hours spent in total
 
 ## User Stories
 
@@ -51,6 +51,12 @@ The following **additional** features are implemented:
 
 * [x] Valid begin date bounds (date picker has its min date set to 09-18-1851 and max date set to
 the current day)
+* [x] A heart icon to "favorite" or save articles. It appears in the toolbar.
+  * From the search activity, it takes you to a new activity that shows just your saved articles. You can tap to view the article or long tap to delete the article from your saved articles.
+  * From the article activity, the icon in the toolbar changes to reflect whether or not it is in your favorites. You can tap on it to save/unsave it.
+  * Implemented with SQLiteOpenHelper.
+  * In a future version, the heart icon would appear on the individual grid item results as well.
+  * In a future version, instead of a separate activity for saved articles, this might be better implemented as a tab?
 
 ## Video Walkthrough
 
