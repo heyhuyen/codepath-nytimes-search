@@ -3,7 +3,7 @@
 NYT Search is an android app that allows a user to search for articles on web using simple filters.
 The app utilizes [New York Times Search API](http://developer.nytimes.com/docs/read/article_search_api_v2).
 
-Time spent: 18 hours spent in total
+Time spent: 19 hours spent in total
 
 ## User Stories
 
@@ -35,7 +35,8 @@ The following **bonus** features are implemented:
 
 * [x] Use the [RecyclerView](http://guides.codepath.com/android/Using-the-RecyclerView) with the
 `StaggeredGridLayoutManager` to display improve the grid of image results
-* [ ] For different news articles that only have text or only have images, use [Heterogenous Layouts](http://guides.codepath.com/android/Heterogenous-Layouts-inside-RecyclerView) with RecyclerView
+* [x] For different news articles that only have text or only have images, use [Heterogenous
+Layouts](http://guides.codepath.com/android/Heterogenous-Layouts-inside-RecyclerView) with RecyclerView
 * [x] Use Parcelable instead of Serializable using the popular [Parceler library](http://guides
 .codepath.com/android/Using-Parceler).
 * [ ] Leverages the [data binding support module](http://guides.codepath.com/android/Applying-Data-Binding-for-Views) to bind data into layout templates.

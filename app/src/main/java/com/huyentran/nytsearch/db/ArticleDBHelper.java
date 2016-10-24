@@ -24,7 +24,7 @@ public class ArticleDBHelper extends SQLiteOpenHelper {
 
     // Database Info
     private static final String DATABASE_NAME = "nytsDatabase";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Table Names
     private static final String TABLE_ARTICLES = "articles";
@@ -34,6 +34,7 @@ public class ArticleDBHelper extends SQLiteOpenHelper {
     private static final String KEY_WEB_URL = "webUrl";
     private static final String KEY_HEADLINE = "headline";
     private static final String KEY_THUMBNAIL = "thumbnail";
+    private static final String KEY_SNIPPET = "snippet";
 
     public static synchronized ArticleDBHelper getInstance(Context context) {
         if (articleDatabaseHelper == null) {
@@ -66,7 +67,8 @@ public class ArticleDBHelper extends SQLiteOpenHelper {
                 KEY_ID + " INTEGER PRIMARY KEY," + // Define a primary key
                 KEY_WEB_URL + " TEXT," +
                 KEY_HEADLINE + " TEXT," +
-                KEY_THUMBNAIL + " TEXT" +
+                KEY_THUMBNAIL + " TEXT," +
+                KEY_SNIPPET + " TEXT" +
                 ")";
 
         db.execSQL(CREATE_POSTS_TABLE);
@@ -104,7 +106,8 @@ public class ArticleDBHelper extends SQLiteOpenHelper {
                     String webUrl = cursor.getString(cursor.getColumnIndex(KEY_WEB_URL));
                     String headline = cursor.getString(cursor.getColumnIndex(KEY_HEADLINE));
                     String thumbnail = cursor.getString(cursor.getColumnIndex(KEY_THUMBNAIL));
-                    articles.add(new Article(id, webUrl, headline, thumbnail));
+                    String snippet = cursor.getString(cursor.getColumnIndex(KEY_SNIPPET));
+                    articles.add(new Article(id, webUrl, headline, thumbnail, snippet));
                 } while(cursor.moveToNext());
             }
         } catch (Exception e) {
@@ -134,6 +137,7 @@ public class ArticleDBHelper extends SQLiteOpenHelper {
             values.put(KEY_WEB_URL, article.getWebUrl());
             values.put(KEY_HEADLINE, article.getHeadline());
             values.put(KEY_THUMBNAIL, article.getThumbnail());
+            values.put(KEY_SNIPPET, article.getSnippet());
 
             // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
             id = db.insertOrThrow(TABLE_ARTICLES, null, values);
@@ -154,18 +158,23 @@ public class ArticleDBHelper extends SQLiteOpenHelper {
         Article result = null;
 
         String SELECT_QUERY = String.format("SELECT * FROM %s WHERE webUrl=? AND headline=? AND " +
-                "thumbnail=?", TABLE_ARTICLES);
+                "thumbnail=? AND snippet=?", TABLE_ARTICLES);
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(SELECT_QUERY, new String[] {
-                article.getWebUrl(), article.getHeadline(), article.getThumbnail()});
+                article.getWebUrl(),
+                article.getHeadline(),
+                article.getThumbnail(),
+                article.getSnippet()
+        });
         try {
             if (cursor.moveToFirst()) {
                 long id = cursor.getLong(cursor.getColumnIndex(KEY_ID));
                 String webUrl = cursor.getString(cursor.getColumnIndex(KEY_WEB_URL));
                 String headline = cursor.getString(cursor.getColumnIndex(KEY_HEADLINE));
                 String thumbnail = cursor.getString(cursor.getColumnIndex(KEY_THUMBNAIL));
-                result = new Article(id, webUrl, headline, thumbnail);
+                String snippet = cursor.getString(cursor.getColumnIndex(KEY_SNIPPET));
+                result = new Article(id, webUrl, headline, thumbnail, snippet);
             }
         } catch (Exception e) {
             Log.d(TAG, "Error while trying to get article from database");

@@ -25,7 +25,7 @@ public class ArticleClient {
     private static final String SORT_BY_PARAM_KEY = "sort";
     private static final String FILTERS_PARAM_KEY = "fq";
     private static final String FIELD_LIMIT_PARAM_KEY = "fl";
-    private static final String FIELD_LIMIT_PARAM = "web_url,multimedia,headline,pub_date,document_type,news_desk";
+    private static final String FIELD_LIMIT_PARAM = "web_url,snippet,multimedia,headline,pub_date,document_type,news_desk";
 
     private static final String HYPHEN = "-";
     private static final String SPACE = " ";

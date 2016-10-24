@@ -18,26 +18,16 @@ import java.util.List;
 /**
  * Adapter for {@link Article Articles}.
  */
-public class ArticleArrayAdapter extends RecyclerView.Adapter<ArticleArrayAdapter.ViewHolder> {
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView ivThumbnail;
-        public TextView tvHeadline;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            ivThumbnail = (ImageView) itemView.findViewById(R.id.ivThumbnail);
-            tvHeadline = (TextView) itemView.findViewById(R.id.tvHeadline);
-        }
-    }
+public class ArticleArrayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Article> mArticles;
     private Context mContext;
 
+    private final int TEXT = 0, THUMBNAIL = 1;
+
     public ArticleArrayAdapter(Context context, List<Article> articles) {
-        mArticles = articles;
-        mContext = context;
+        this.mArticles = articles;
+        this.mContext = context;
     }
 
     private Context getContext() {
@@ -45,34 +35,82 @@ public class ArticleArrayAdapter extends RecyclerView.Adapter<ArticleArrayAdapte
     }
 
     @Override
-    public ArticleArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder viewHolder;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        // Inflate the custom layout
-        View articleView = inflater.inflate(R.layout.item_article_result, parent, false);
+        switch (viewType) {
+            case THUMBNAIL:
+                View thumbnailView = inflater.inflate(R.layout.item_thumbnail, parent, false);
+                viewHolder = new ThumbnailViewHolder(thumbnailView);
+                break;
+            case TEXT:
+                View textView = inflater.inflate(R.layout.item_text, parent, false);
+                viewHolder = new TextViewHolder(textView);
+                break;
+            default:
+                View defaultView = inflater.inflate(R.layout.item_text, parent, false);
+                viewHolder = new TextViewHolder(defaultView);
+                break;
+        }
+        return viewHolder;
 
-        // Return a new holder instance
-        return new ViewHolder(articleView);
     }
 
     @Override
-    public void onBindViewHolder(ArticleArrayAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        switch (viewHolder.getItemViewType()) {
+            case THUMBNAIL:
+                ThumbnailViewHolder vh1 = (ThumbnailViewHolder) viewHolder;
+                configureThumnailViewHolder(vh1, position);
+                break;
+            case TEXT:
+                TextViewHolder vh2 = (TextViewHolder) viewHolder;
+                configureTextViewHolder(vh2, position);
+                break;
+            default:
+                TextViewHolder vh = (TextViewHolder) viewHolder;
+                configureTextViewHolder(vh, position);
+                break;
+        }
+    }
+
+    private void configureThumnailViewHolder(ThumbnailViewHolder viewHolder, int position) {
         Article article = this.mArticles.get(position);
 
-        ImageView ivThumbnail = viewHolder.ivThumbnail;
+        ImageView ivThumbnail = viewHolder.getThumbnail();
         ivThumbnail.setImageResource(0);
         String thumbnailUrl = article.getThumbnail();
         if (!TextUtils.isEmpty(thumbnailUrl)) {
             Picasso.with(getContext()).load(thumbnailUrl).fit()
                     .centerCrop().into(ivThumbnail);
         }
-        TextView tvHeadline = viewHolder.tvHeadline;
+        TextView tvHeadline = viewHolder.getHeadline();
         tvHeadline.setText(article.getHeadline());
+    }
+
+    private void configureTextViewHolder(TextViewHolder viewHolder, int position) {
+        Article article = this.mArticles.get(position);
+
+        TextView tvHeadline = viewHolder.getHeadline();
+        tvHeadline.setText(article.getHeadline());
+
+        TextView tvSnippet = viewHolder.getSnippet();
+        tvSnippet.setText(article.getSnippet());
     }
 
     @Override
     public int getItemCount() {
         return this.mArticles.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        String thumbnail = this.mArticles.get(position).getThumbnail();
+        if (thumbnail != null && !TextUtils.isEmpty(thumbnail)) {
+            return THUMBNAIL;
+        } else {
+            return TEXT;
+        }
     }
 }

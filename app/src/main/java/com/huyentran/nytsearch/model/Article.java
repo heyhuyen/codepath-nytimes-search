@@ -17,6 +17,7 @@ public class Article {
     private static final String WEB_URL_KEY = "web_url";
     private static final String HEADLINE_KEY = "headline";
     private static final String MAIN_HEADLINE_KEY = "main";
+    private static final String SNIPPET_KEY = "snippet";
     private static final String MULTIMEDIA_KEY = "multimedia";
     private static final String URL_KEY = "url";
     private static final String THUMBNAIL_URL_FORMAT = "http://www.nytimes.com/%s";
@@ -25,22 +26,25 @@ public class Article {
     String webUrl;
     String headline;
     String thumbnail;
+    String snippet;
 
     public Article() {
         // empty constructor for Parceler library
     }
 
-    public Article(long id, String webUrl, String headline, String thumbnail) {
+    public Article(long id, String webUrl, String headline, String thumbnail, String snippet) {
         this.id = id;
         this.webUrl = webUrl;
         this.headline = headline;
         this.thumbnail = thumbnail;
+        this.snippet = snippet;
     }
 
     public Article(JSONObject jsonObject) {
         try {
             this.webUrl = jsonObject.getString(WEB_URL_KEY);
             this.headline = jsonObject.getJSONObject(HEADLINE_KEY).getString(MAIN_HEADLINE_KEY);
+            this.snippet = jsonObject.getString(SNIPPET_KEY);
 
             JSONArray multimedia = jsonObject.getJSONArray(MULTIMEDIA_KEY);
             if (multimedia.length() > 0) {
@@ -90,6 +94,10 @@ public class Article {
 
     public String getThumbnail() {
         return this.thumbnail;
+    }
+
+    public String getSnippet() {
+        return this.snippet;
     }
 
 }
