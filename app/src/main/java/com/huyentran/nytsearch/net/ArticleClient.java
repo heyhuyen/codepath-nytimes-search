@@ -1,6 +1,5 @@
 package com.huyentran.nytsearch.net;
 
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.common.base.Function;
@@ -32,13 +31,7 @@ public class ArticleClient {
     private static final String NEWS_DESK_VALUE_FORMAT = "\"%s\"";
     private static final String NEWS_DESK_FORMAT = "news_desk:(%s)";
     private static final Function<String, String> NEWS_DESK_VALUE_TRANSFORM =
-            new Function<String, String>() {
-                @Nullable
-                @Override
-                public String apply(String input) {
-                    return String.format(NEWS_DESK_VALUE_FORMAT, input);
-                }
-            };
+            input -> String.format(NEWS_DESK_VALUE_FORMAT, input);
 
     private AsyncHttpClient client;
 

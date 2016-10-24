@@ -15,7 +15,6 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -89,12 +88,7 @@ public class SearchActivity extends AppCompatActivity
                         StaggeredGridLayoutManager.VERTICAL);
         this.rvArticles.setLayoutManager(gridLayoutManager);
         ItemClickSupport.addTo(this.rvArticles).setOnItemClickListener(
-                new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        launchArticleView(position);
-                    }
-                }
+                (recyclerView, position, v) -> launchArticleView(position)
         );
         SpacesItemDecoration decoration = new SpacesItemDecoration(GRID_SPACE_SIZE);
         this.rvArticles.addItemDecoration(decoration);
@@ -187,12 +181,7 @@ public class SearchActivity extends AppCompatActivity
                 if (statusCode == 429 && errorResponse.toString().equals("{\"message\":\"API rate limit exceeded\"}")) {
                     Log.d("DEBUG", "API rate limit exceeded. Retrying in 2s.");
                     Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            articleSearch(query, page);
-                        }
-                    }, RETRY_DELAY_MILLIS);
+                    handler.postDelayed(() -> articleSearch(query, page), RETRY_DELAY_MILLIS);
                 }
             }
         });
@@ -230,11 +219,9 @@ public class SearchActivity extends AppCompatActivity
     @Override
     public void onFinishFilterDialog(FilterSettings filterSettings) {
         boolean filtersChanged = !this.filterSettings.equals(filterSettings);
-        Log.d("DEBUG", "filter changesd " + filtersChanged);
         if (filtersChanged) {
             this.filterSettings = filterSettings;
             if (this.articleArrayAdapter.getItemCount() != 0) {
-                Log.d("DEBUG", "refresh!");
                 articleSearch(this.searchView.getQuery().toString(), FIRST_PAGE);
             }
         }

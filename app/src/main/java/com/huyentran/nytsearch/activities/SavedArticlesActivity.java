@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.huyentran.nytsearch.R;
 import com.huyentran.nytsearch.adapters.ArticleArrayAdapter;
@@ -68,24 +67,16 @@ public class SavedArticlesActivity extends AppCompatActivity {
                         StaggeredGridLayoutManager.VERTICAL);
         this.rvArticles.setLayoutManager(gridLayoutManager);
         ItemClickSupport.addTo(this.rvArticles).setOnItemClickListener(
-                new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        launchArticleView(position);
-                    }
-                }
+                (recyclerView, position, v) -> launchArticleView(position)
         );
         ItemClickSupport.addTo(this.rvArticles).setOnItemLongClickListener(
-            new ItemClickSupport.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+                (recyclerView, position, v) -> {
                     Article article = articles.get(position);
                     articleDBHelper.deleteArticle(article.getId());
                     articles.remove(position);
                     articleArrayAdapter.notifyDataSetChanged();
                     return true;
                 }
-            }
         );
         SpacesItemDecoration decoration = new SpacesItemDecoration(GRID_SPACE_SIZE);
         this.rvArticles.addItemDecoration(decoration);

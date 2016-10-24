@@ -3,7 +3,6 @@ package com.huyentran.nytsearch.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
@@ -26,8 +25,6 @@ import static com.huyentran.nytsearch.utils.Constants.ARTICLE_KEY;
  * Activity for viewing an article.
  */
 public class ArticleActivity extends AppCompatActivity {
-
-    private ShareActionProvider miShareAction;
     private Menu menu;
     private WebView webView;
     private ArticleDBHelper articleDBHelper;
@@ -63,12 +60,13 @@ public class ArticleActivity extends AppCompatActivity {
         this.menu = menu;
 
         MenuItem shareItem = menu.findItem(R.id.miShare);
-        this.miShareAction = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+        ShareActionProvider miShareAction =
+                (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         // pass in the URL currently being used by the WebView
         shareIntent.putExtra(Intent.EXTRA_TEXT, this.webView.getUrl());
-        this.miShareAction.setShareIntent(shareIntent);
+        miShareAction.setShareIntent(shareIntent);
 
         // check if article is saved and set save icon
         boolean articleSaved = this.articleDBHelper.getArticle(article) != null;

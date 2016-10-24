@@ -1,7 +1,6 @@
 package com.huyentran.nytsearch.model;
 
 import org.parceler.Parcel;
-import org.parceler.ParcelConstructor;
 
 import java.util.HashSet;
 

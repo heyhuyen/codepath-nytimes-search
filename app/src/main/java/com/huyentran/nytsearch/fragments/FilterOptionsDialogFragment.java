@@ -91,20 +91,12 @@ public class FilterOptionsDialogFragment extends DialogFragment
         if (!TextUtils.isEmpty(beginDate)) {
             this.etBeginDate.setText(beginDate);
         }
-        this.etBeginDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePickerDialog();
-            }
-        });
+        this.etBeginDate.setOnClickListener(v -> showDatePickerDialog());
 
         ImageButton btnClearBeginDate = (ImageButton) view.findViewById(R.id.btnClearBeginDate);
-        btnClearBeginDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // clear begin date text
-                etBeginDate.setText(EMPTY);
-            }
+        btnClearBeginDate.setOnClickListener(v -> {
+            // clear begin date text
+            etBeginDate.setText(EMPTY);
         });
     }
 
@@ -151,34 +143,25 @@ public class FilterOptionsDialogFragment extends DialogFragment
             this.cbSports.setChecked(true);
         }
 
-        this.cbArts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cbArts.isChecked()) {
-                    filterSettings.addNewsDeskValue(NEWS_DESK_ARTS);
-                } else {
-                    filterSettings.removeNewsDeskValue(NEWS_DESK_ARTS);
-                }
+        this.cbArts.setOnClickListener(v -> {
+            if (cbArts.isChecked()) {
+                filterSettings.addNewsDeskValue(NEWS_DESK_ARTS);
+            } else {
+                filterSettings.removeNewsDeskValue(NEWS_DESK_ARTS);
             }
         });
-        this.cbFashion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cbFashion.isChecked()) {
-                    filterSettings.addNewsDeskValue(NEWS_DESK_FASHION);
-                } else {
-                    filterSettings.removeNewsDeskValue(NEWS_DESK_FASHION);
-                }
+        this.cbFashion.setOnClickListener(v -> {
+            if (cbFashion.isChecked()) {
+                filterSettings.addNewsDeskValue(NEWS_DESK_FASHION);
+            } else {
+                filterSettings.removeNewsDeskValue(NEWS_DESK_FASHION);
             }
         });
-        this.cbSports.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cbSports.isChecked()) {
-                    filterSettings.addNewsDeskValue(NEWS_DESK_SPORTS);
-                } else {
-                    filterSettings.removeNewsDeskValue(NEWS_DESK_SPORTS);
-                }
+        this.cbSports.setOnClickListener(v -> {
+            if (cbSports.isChecked()) {
+                filterSettings.addNewsDeskValue(NEWS_DESK_SPORTS);
+            } else {
+                filterSettings.removeNewsDeskValue(NEWS_DESK_SPORTS);
             }
         });
     }
@@ -187,24 +170,16 @@ public class FilterOptionsDialogFragment extends DialogFragment
         Button btnSave = (Button) view.findViewById(R.id.btnSave);
         Button btnCancel = (Button) view.findViewById(R.id.btnCancel);
 
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                filterSettings.setBeginDate(etBeginDate.getText().toString());
+        btnSave.setOnClickListener(v -> {
+            filterSettings.setBeginDate(etBeginDate.getText().toString());
 
-                filterSettings.setSortOrder(FilterSettings.SortOrder.valueOf(
-                        spSortOrder.getSelectedItem().toString().toUpperCase()));
+            filterSettings.setSortOrder(FilterSettings.SortOrder.valueOf(
+                    spSortOrder.getSelectedItem().toString().toUpperCase()));
 
-                listener.onFinishFilterDialog(filterSettings);
-                dismiss();
-            }
+            listener.onFinishFilterDialog(filterSettings);
+            dismiss();
         });
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        btnCancel.setOnClickListener(v -> dismiss());
     }
 }

@@ -2,7 +2,6 @@ package com.huyentran.nytsearch.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 
 /**
  * Endless RecyclerView scrolling. Source: https://gist.github.com/nesquena/d09dc68ff07e845cc622
