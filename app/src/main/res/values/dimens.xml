@@ -4,10 +4,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="dialog_title_padding">8dp</dimen>
-
-    <dimen name="thumbnail_size">75dp</dimen>
-
     <!-- Filter Options -->
     <dimen name="filter_label_width">100dp</dimen>
     <dimen name="filter_row_padding">10dp</dimen>
@@ -17,4 +13,14 @@
     <dimen name="button_text_size">16sp</dimen>
     <dimen name="headline_text_size">13sp</dimen>
     <dimen name="snippet_text_size">10sp</dimen>
+
+    <dimen name="dialog_title_padding">8dp</dimen>
+
+    <dimen name="thumbnail_size">75dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
+
+    <dimen name="button_width">60dp</dimen>
+    <dimen name="button_height">20dp</dimen>
+    <dimen name="button_padding">0dp</dimen>
+    <dimen name="button_radius">5dp</dimen>
 </resources>

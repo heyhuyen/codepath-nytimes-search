@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.huyentran.nytsearch.R;
 import com.huyentran.nytsearch.model.Article;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -82,8 +82,10 @@ public class ArticleArrayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ivThumbnail.setImageResource(0);
         String thumbnailUrl = article.getThumbnail();
         if (!TextUtils.isEmpty(thumbnailUrl)) {
-            Picasso.with(getContext()).load(thumbnailUrl).fit()
-                    .centerCrop().into(ivThumbnail);
+            Glide.with(getContext()).load(thumbnailUrl)
+                    .placeholder(R.drawable.icon_news)
+                    .centerCrop()
+                    .into(ivThumbnail);
         }
         TextView tvHeadline = viewHolder.getHeadline();
         tvHeadline.setText(article.getHeadline());

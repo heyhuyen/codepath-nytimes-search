@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle" >
     <corners
-        android:radius="5dp"
+        android:radius="@dimen/button_radius"
         />
     <solid
         android:color="@color/colorPrimaryLight"
         />
     <padding
-        android:left="0dp"
-        android:top="0dp"
-        android:right="0dp"
-        android:bottom="0dp"
+        android:left="@dimen/button_padding"
+        android:top="@dimen/button_padding"
+        android:right="@dimen/button_padding"
+        android:bottom="@dimen/button_padding"
         />
     <size
-        android:width="60dp"
-        android:height="20dp"
+        android:width="@dimen/button_width"
+        android:height="@dimen/button_height"
         />
 </shape>
