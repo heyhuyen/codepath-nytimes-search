@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,7 +49,7 @@ public class SearchActivity extends AppCompatActivity
         implements FilterOptionsDialogFragment.FilterOptionsFragmentListener{
 
     private static final int FIRST_PAGE = 0;
-    private static final int PAGE_MAX = 2; // TODO: lower for now
+    private static final int PAGE_MAX = 5;
     private static final int RETRY_DELAY_MILLIS = 2000;
     private static final String FILTER_OPTIONS_FRAGMENT_TAG = "fragment_filter_options";
 
@@ -221,8 +222,9 @@ public class SearchActivity extends AppCompatActivity
         boolean filtersChanged = !this.filterSettings.equals(filterSettings);
         if (filtersChanged) {
             this.filterSettings = filterSettings;
-            if (this.articleArrayAdapter.getItemCount() != 0) {
-                articleSearch(this.searchView.getQuery().toString(), FIRST_PAGE);
+            String query = this.searchView.getQuery().toString();
+            if (!TextUtils.isEmpty(query)) {
+                articleSearch(query, FIRST_PAGE);
             }
         }
     }
